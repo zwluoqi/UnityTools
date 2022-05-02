@@ -5,11 +5,11 @@ namespace UnityTools.ScriptedObjectUpdate
     [CustomEditor(typeof(DemoSettingMono))]
     public class DemoSettingMonoEditor : Editor
     {
-        private SettingEditor<LSystemMesh> shapeEdirot;
+        private SettingEditor<DemoSettingMono> shapeEdirot;
 
         private void OnEnable()
         {
-            shapeEdirot = new SettingEditor<LSystemMesh>();
+            shapeEdirot = new SettingEditor<DemoSettingMono>();
             shapeEdirot.OnEnable(this);
         }
 
