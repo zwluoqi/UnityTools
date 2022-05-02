@@ -630,6 +630,84 @@ namespace UnityTools.TextureTools
 		}
 
 
+		[MenuItem("Assets/TextureTools/OneMinusRGBA")]
+		private static void OneMinusRGBA()
+		{
+			var selects = Selection.objects;
+			foreach (var sSelect in selects)
+			{
+				var tx = sSelect as Texture2D;
+				var path = AssetDatabase.GetAssetPath(tx);
+				var dir = Path.GetDirectoryName(path);
+				TextureSettingTools.AssetSetReadWriteEnabled(path,true,true);
+				OneMinusRGBA(tx,dir+"/"+sSelect.name+"_OneMinusRGBA.png");
+			}
 
+		}
+		
+		public static void OneMinusRGBA(Texture2D rgba,string path)
+		{
+			UnityEngine.Color[] color = new Color[rgba.width*rgba.height];
+			UnityEngine.Color[] source = rgba.GetPixels();
+			for (int i = 0; i < color.Length; i++)
+			{
+				color[i] = Color.white - source[i];
+			}
+			
+			Texture2D newTex = new Texture2D(rgba.width,rgba.height);
+			newTex.SetPixels(color);
+			newTex.Apply();
+			File.WriteAllBytes(path,newTex.EncodeToPNG());
+			AssetDatabase.Refresh();
+		}
+		
+
+		public static void CombineTexByRGBA(Texture2D[] rgba,int[] sampleIndex, string combinePath)
+		{
+			if (rgba[3] == null)
+			{
+				rgba[3] = rgba[0];
+				sampleIndex[3] = 0;
+			}
+			
+			int width = rgba[0].width;
+			int height =  rgba[0].height;
+			// UnityEngine.Color[]  cols = new Color[width*height];
+			UnityEngine.Color[][] colors = new Color[4][];
+			for (int i = 0; i < rgba.Length; i++)
+			{
+				if (rgba[i].width != width)
+				{
+					Debug.LogError("width 不匹配");
+					return;
+				}
+				if (rgba[i].height != height)
+				{
+					Debug.LogError("height 不匹配");
+					return;
+				}
+				var path = AssetDatabase.GetAssetPath(rgba[i]);
+				TextureSettingTools.AssetSetReadWriteEnabled(path,true,true);
+				colors[i] = rgba[i].GetPixels();
+			}
+			UnityEngine.Color[] color = new Color[rgba[0].width*rgba[0].height];
+
+			for (int i = 0; i < color.Length; i++)
+			{
+				var r = colors[0][i][sampleIndex[0]];
+				var g = colors[1][i][sampleIndex[1]];
+				var b = colors[2][i][sampleIndex[2]];
+				var a = colors[3][i][sampleIndex[3]];
+				
+				color[i] = new Color(r,g,b,a);
+			}
+			
+			Texture2D newTex = new Texture2D(width,height);
+			newTex.SetPixels(color);
+			newTex.Apply();
+			File.WriteAllBytes(combinePath,newTex.EncodeToPNG());
+			AssetDatabase.Refresh();
+			
+		}
 	}
 }
