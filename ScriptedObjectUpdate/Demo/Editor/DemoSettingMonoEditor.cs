@@ -3,7 +3,7 @@ using UnityEditor;
 namespace UnityTools.ScriptedObjectUpdate
 {
     [CustomEditor(typeof(DemoSettingMono))]
-    public class DemoSettingMono : Editor
+    public class DemoSettingMonoEditor : Editor
     {
         private SettingEditor<LSystemMesh> shapeEdirot;
 
