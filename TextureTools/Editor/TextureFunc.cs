@@ -8,7 +8,7 @@ namespace UnityTools.TextureTools
 	public class TextureFunc : Editor
 	{
 
-		[MenuItem("Assets/TextureTools/Tiqu TexAndResize100")]
+		[MenuItem("Assets/TextureTools/提取 TexAndResize100")]
 		public static void ChouquSelectTexAndReset()
 		{
 			SelectTex(true);
