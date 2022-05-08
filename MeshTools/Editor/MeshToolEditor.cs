@@ -1,5 +1,7 @@
-﻿using UnityEditor;
+﻿using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
+using UnityTools.Physics.Obb;
 
 namespace UnityTools.MeshTools
 {
@@ -19,6 +21,7 @@ namespace UnityTools.MeshTools
                 mesh.hideFlags = HideFlags.None;
                 AssetDatabase.CreateAsset(mesh, "Assets/UnityTools/MeshTools/" + mono.name+".asset");
             }
+            
         }
     }
 }
