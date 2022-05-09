@@ -38,6 +38,15 @@ namespace UnityTools.Physics.Obb
             AddFace(5,1,0,4,ref pos);
 
             // Gizmos.DrawCube(obb.m_pos,obb.m_ext);
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(this.transform.position+obb.m_pos,.1f);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(this.transform.position+obb.m_pos,this.transform.position+obb.m_pos+obb.right*obb.m_ext[0]);
+            Gizmos.color = Color.green;
+            Gizmos.DrawLine(this.transform.position+obb.m_pos,this.transform.position+obb.m_pos+obb.up*obb.m_ext[1]);
+            Gizmos.color = Color.blue;
+            Gizmos.DrawLine(this.transform.position+obb.m_pos,this.transform.position+obb.m_pos+obb.forward*obb.m_ext[2]);
+            
         }
 
         private void AddFace(int i, int i1, int i2, int i3,ref Vector3[] pos)

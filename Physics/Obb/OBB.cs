@@ -12,6 +12,33 @@ namespace UnityTools.Physics.Obb
         public Vector3	m_pos;		// translation component of the transformation
         public Vector3	m_ext;		// bounding box extents
 
+        public Vector3 GetDir(int index)
+        {
+	        return new Vector3( m_rot[0][index], m_rot[1][index], m_rot[2][index] );
+        }
+        
+        public Vector3 right
+        {
+	        get
+	        {
+		        return new Vector3( m_rot[0][0], m_rot[1][0], m_rot[2][0] );
+	        }
+        }
+        public Vector3 up
+        {
+	        get
+	        {
+		        return new Vector3( m_rot[0][1], m_rot[1][1], m_rot[2][1] );
+	        }
+        }
+        public Vector3 forward
+        {
+	        get
+	        {
+		        return new Vector3( m_rot[0][2], m_rot[1][2], m_rot[2][2] );
+	        }
+        }
+
 	// method to set the OBB parameters which produce a box oriented according to
 	// the covariance matrix C, which just containts the points pnts
 	void build_from_covariance_matrix( float[,] C, List<Vector3> pnts ){
@@ -78,6 +105,8 @@ namespace UnityTools.Physics.Obb
 		p[6] = m_pos + r*m_ext[0] + u*m_ext[1] + f*m_ext[2];
 		p[7] = m_pos - r*m_ext[0] + u*m_ext[1] + f*m_ext[2];
 	}
+
+	
 
 	// build an OBB from a vector of input points.  This
 	// method just forms the covariance matrix and hands

@@ -13,12 +13,14 @@ namespace UnityTools.MeshTools
             var v = mesh.vertices;
             var n = mesh.normals;
             var t = mesh.tangents;
+            var uv = mesh.uv;
             for (int i = 0; i < v.Length; i++)
             {
                 if (vertexId)
                 {
                     #if UNITY_EDITOR
-                    Handles.Label(this.transform.position+v[i],i.ToString());
+                    var pos = this.transform.localToWorldMatrix * new Vector4(v[i].x, v[i].y, v[i].z, 1);
+                    Handles.Label(pos,i.ToString()+$"({uv[i].ToString()})");
                     #endif
                 }
             }
