@@ -2,6 +2,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using UnityEngine.Experimental.Rendering;
 
 namespace UnityTools.TextureTools
 {
@@ -32,7 +33,7 @@ namespace UnityTools.TextureTools
 				Debug.LogWarning(dir);
 
 				TextureSettingTools.AssetSetReadWriteEnabled(path, true, true);
-				TextureSettingTools.AssetSetFormat(path, TextureImporterFormat.ARGB32);
+				TextureSettingTools.AssetSetFormat(path, TextureImporterFormat.RGBA32);
 
 				var objs = AssetDatabase.LoadAllAssetsAtPath(path);
 				Texture2D tex = objs[0] as Texture2D;
@@ -627,6 +628,61 @@ namespace UnityTools.TextureTools
 			}
 
 			AssetDatabase.Refresh();
+		}
+
+		[MenuItem("Assets/TextureTools/SplitRGBA")]
+		private static void SplitRGBA()
+		{
+			var selects = Selection.objects;
+			foreach (var sSelect in selects)
+			{
+				var tx = sSelect as Texture2D;
+				var path = AssetDatabase.GetAssetPath(tx);
+				var dir = Path.GetDirectoryName(path);
+				TextureSettingTools.AssetSetReadWriteEnabled(path,true,true);
+				SplitRGBA0(tx,dir+"/"+sSelect.name);
+			}
+		}
+
+		private static void SplitRGBA0(Texture2D texture2D,string path)
+		{
+			Texture2D tmp = new Texture2D(texture2D.width,texture2D.height,TextureFormat.R8,true);
+			var  colors = texture2D.GetPixels();
+			var newColors = new Color[colors.Length];
+			
+			SplitChannel(newColors, colors,0);
+			tmp.SetPixels(newColors);
+			tmp.Apply();
+			File.WriteAllBytes(path+"_ChannelR.png",tmp.EncodeToPNG());
+			
+			SplitChannel(newColors, colors,1);
+			tmp.SetPixels(newColors);
+			tmp.Apply();
+			File.WriteAllBytes(path+"_ChannelG.png",tmp.EncodeToPNG());
+
+			SplitChannel(newColors, colors,2);
+			tmp.SetPixels(newColors);
+			tmp.Apply();
+			File.WriteAllBytes(path+"_ChannelB.png",tmp.EncodeToPNG());
+			
+			SplitChannel(newColors, colors,3);
+			tmp.SetPixels(newColors);
+			tmp.Apply();
+			File.WriteAllBytes(path+"_ChannelA.png",tmp.EncodeToPNG());
+			
+			AssetDatabase.Refresh();
+		}
+
+		private static void SplitChannel(Color[] newColors, Color[] colors,int channel)
+		{
+			Color zero = new Color(0,0,0,0);
+			for (int i = 0; i < newColors.Length; i++)
+			{
+				newColors[i] = zero;
+				newColors[i][0] = colors[i][channel];
+				newColors[i][1] = colors[i][channel];
+				newColors[i][2] = colors[i][channel];
+			}
 		}
 
 
